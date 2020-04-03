@@ -32,7 +32,7 @@ class Control_message : public message { // Type : C
 		Control_Message();
 }
 
-class Reduce_message { // Type : D
+class Reduce_message : public message { // Type : D
 	public:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -42,18 +42,18 @@ class Reduce_message { // Type : D
 	
 };
 
-class Execution {	// Type : E
+class Execution_message : public message {	// Type : E
 	public:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
 		uint32_t volume;
 		uint64_t mid;
 	protected:
-		Execution();
+		Execution_message();
 	
 };
 
-class Master_message { // Type : L
+class Master_message : public message{ // Type : L
 	public:
 		uint16_t sid; // encodage du produit 
 		char symbol[8];
@@ -66,7 +66,7 @@ class Master_message { // Type : L
 	
 };
 
-class Modify_message { // Type : M
+class Modify_message : public message { // Type : M
 	public:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -78,7 +78,7 @@ class Modify_message { // Type : M
 	
 };
 
-class Remote_message { // Type : R
+class Remote_message : public message{ // Type : R
 	public:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -87,7 +87,7 @@ class Remote_message { // Type : R
 	
 };
 
-class Protocol_message { // Type : Z
+class Protocol_message : public message{ // Type : Z
 	public:
 		uint32_t version;
 	protected:
