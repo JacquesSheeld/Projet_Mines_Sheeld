@@ -41,31 +41,55 @@ int main(int argc, char const *argv[])
         printf("\nConnection Failed \n"); 
         return -1; 
     } 
-    char a;
+    char type;
     while(read(sock, buffer, 1))
 	{
 		cout << buffer[0]; 
-		a = getchar();
+		type = getchar();
+
+        // Pour la partie suivante, on pourrait faire une seule fonction, qui renvoie un objet de type message 
 
 		if (a == "A") { 		// type ADD
 
 			// On définit les buffers adaptés à la taille de chaque champ du message, si j'ai bien compris
-
+			bitset<8> buffer_add[27];
+			Add_message add {buffer_add};
 
 		} else if (a == "C") { // type CONTROL
 
-		} else if (a == "D") { // type REDUCE
-			
+            bitset<8> buffer_controle[11];   
+            Control_message control {buffer_control};
+		
+        } else if (a == "D") { // type REDUCE
+
+            bitset<8> buffer_reduce[22];
+            Reduce_message add {buffer_reduce};
+        			
 		} else if (a == "E") { // type EXECUTE
-			
+		
+            bitset<8> buffer_exec[30];
+            Execute_message add {buffer_exec};
+        	
 		} else if (a == "L") { // type MASTER
-			 
+		
+            bitset<8> buffer_master[24];
+            Master_message add {buffer_master};
+        	 
 		} else if (a == "M") { // type MODIFY
-			
+		
+            bitset<8> buffer_modify[33];
+            Modify_message add {buffer_modify};
+        	
 		} else if (a == "R") { // type REMOTE
-			
+		
+            bitset<8> buffer_remote[18];
+            Remote_message add {buffer_remote};
+        	
 		} else if (a == "Z") { // type PROTOCOL
-			
+		
+            bitset<8> buffer_protocol[12];
+            Protocol_message add {buffer_protocol};
+        	
 		}
 
 	}

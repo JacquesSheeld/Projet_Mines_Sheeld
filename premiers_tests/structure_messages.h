@@ -29,7 +29,7 @@ class Control_message : public message { // Type : C
 		uint16_t sid; // encodage du produit 
 		char Operating_status;
 	public:
-		Control_Message();
+		Control_message();
 }
 
 class Reduce_message : public message { // Type : D
