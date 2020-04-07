@@ -46,6 +46,28 @@ int main(int argc, char const *argv[])
 	{
 		cout << buffer[0]; 
 		a = getchar();
+
+		if (a == "A") { 		// type ADD
+
+			// On définit les buffers adaptés à la taille de chaque champ du message, si j'ai bien compris
+
+
+		} else if (a == "C") { // type CONTROL
+
+		} else if (a == "D") { // type REDUCE
+			
+		} else if (a == "E") { // type EXECUTE
+			
+		} else if (a == "L") { // type MASTER
+			 
+		} else if (a == "M") { // type MODIFY
+			
+		} else if (a == "R") { // type REMOTE
+			
+		} else if (a == "Z") { // type PROTOCOL
+			
+		}
+
 	}
     return 0; 
 } 
