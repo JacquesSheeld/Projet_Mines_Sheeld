@@ -10,7 +10,7 @@ class message {
 		uint64_t time;
 
 	public:
-		message();
+		message(uint8_t _type, uint64_t _time);
 };
 
 class Add_message : public message { // Type : A
@@ -21,76 +21,77 @@ class Add_message : public message { // Type : A
 		uint32_t volume;
 		char status;
 	public:
-		Add_message();
+		Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _price, uint32_t _volume, char _status);
+
 };
 
 class Control_message : public message { // Type : C
 	protected:
 		uint16_t sid; // encodage du produit 
-		char Operating_status;
+		char status;
 	public:
-		Control_message();
-}
+		Control_message(uint8_t _type, uint64_t _time, uint16_t _sid, char _status);
+};
 
 class Reduce_message : public message { // Type : D
-	public:
+	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
 		uint32_t volume;	
-	protected:
-		Reduce_message();
+	public:
+		Reduce_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _volume);
 	
 };
 
 class Execution_message : public message {	// Type : E
-	public:
+	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
 		uint32_t volume;
 		uint64_t mid;
-	protected:
-		Execution_message();
+	public:
+		Execution_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _volume, uint64_t _mid);
 	
 };
 
 class Master_message : public message{ // Type : L
-	public:
+	protected:
 		uint16_t sid; // encodage du produit 
 		char symbol[8];
 		char currency[8];
 		uint8_t lot;
 		uint8_t tick;
-		char classification	
-	protected:
-		Master_message();
+		char classification;
+	public:
+		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char _symbol[8], char _currency[8], uint8_t _lot, uint8_t _tick, char _classification);
 	
 };
 
 class Modify_message : public message { // Type : M
-	public:
+	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
 		uint64_t nid;
 		uint32_t price;
 		uint32_t volume;	
-	protected:
-		Modify_message();
+	public:
+		Modify_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint64_t _nid, uint32_t _price, uint32_t _volume);
 	
 };
 
 class Remote_message : public message{ // Type : R
-	public:
+	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
-	protected:
-		Remote_message();
+	public:
+		Remote_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid);
 	
 };
 
 class Protocol_message : public message{ // Type : Z
-	public:
-		uint32_t version;
 	protected:
-		Protocol_message();
+		uint32_t version;
+	public:
+		Protocol_message(uint8_t _type, uint64_t _time, uint32_t _version);
 	
 };
