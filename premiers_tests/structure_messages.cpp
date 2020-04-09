@@ -2,7 +2,14 @@
 using namespace std;
 // Message général
 
-message::message(uint8_t _type, uint64_t _time): type(_type), time(_time) {};
+using Clock = chrono::high_resolution_clock;
+using TimePoint = std::chrono::time_point<Clock>;
+
+message::message(uint8_t _type, uint64_t _time): type(_type), time(_time) {
+	const Clock::duration duration_nanoseconds = chrono::nanoseconds(_time);
+	const TimePoint TimePoint_message(duration_nanoseconds);
+	time_message = Clock::to_time_t(TimePoint_message);
+};
 
 
 // ADD
@@ -91,7 +98,7 @@ Remote_message::Remote_message(uint8_t _type, uint64_t _time, uint16_t _sid, uin
 	qid(_qid) {};
 
 void Remote_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "qid : " << qid << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << endl << "sid : " << sid << endl << "qid : " << qid << endl << endl;
 }
 
 // PROTOCOL

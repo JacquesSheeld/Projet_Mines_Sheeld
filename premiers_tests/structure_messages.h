@@ -1,6 +1,8 @@
 #include <string>
 #include <cstdint>
 #include <iostream>
+#include <chrono>
+#include <ctime>
 
 using namespace std;
 
@@ -8,7 +10,7 @@ class message {
 	protected:
 		uint8_t type;
 		uint64_t time;
-
+		time_t time_message;
 	public:
 		message(uint8_t _type, uint64_t _time);
 };
