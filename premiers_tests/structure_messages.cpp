@@ -57,14 +57,14 @@ void Execution_message::Display(){
 
 // MASTER
 
-/*Master_message::Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char _symbol[8], char _currency[8], uint8_t _lot, uint8_t _tick, char _classification):
+Master_message::Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char _classification):
 																					message(_type, _time),
 																					sid(_sid),
 																					symbol(_symbol),
 																					currency(_currency),
 																					lot(_lot),
 																					tick(_tick),
-																					classification(_classification) {};*/
+																					classification(_classification) {};
 
 // MODIFY
 

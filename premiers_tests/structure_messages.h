@@ -61,13 +61,13 @@ class Execution_message : public message {	// Type : E
 class Master_message : public message{ // Type : L
 	protected:
 		uint16_t sid; // encodage du produit 
-		char symbol[8];
-		char currency[8];
+		char* symbol = new char[8];
+		char* currency = new char[8];
 		uint8_t lot;
 		uint8_t tick;
 		char classification;
 	public:
-		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char _symbol[8], char _currency[8], uint8_t _lot, uint8_t _tick, char _classification);
+		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char _classification);
 		void Display();
 	
 };
