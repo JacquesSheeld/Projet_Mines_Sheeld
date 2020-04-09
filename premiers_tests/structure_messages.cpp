@@ -14,6 +14,10 @@ Add_message::Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t 
 																															price(_price),
 																															volume(_volume),
 																															status(_status) {};
+																													
+void Add_message::Display(){
+	cout << "type :" << type << endl << "time :" << time << endl << "sid :" << sid << endl << "qid :" << qid << endl <<  "price :" << price << endl << "volume :" << volume << endl << "status :" << status << endl << endl;
+}
 
 // CONTROL
 
@@ -73,6 +77,6 @@ Protocol_message::Protocol_message(uint8_t _type, uint64_t _time, uint32_t _vers
 	message(_type, _time),
 	version(_version) {};
 
-Protocol_message::Display():
-	cout << "type : " << type << endl << "time : " << time << endl << "version : " << version << endl;
-
+void Protocol_message::Display(){
+	cout << "type : " << type << endl << "time : " << time << endl << "version : " << version << endl << endl;
+}
