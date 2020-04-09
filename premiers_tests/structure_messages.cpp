@@ -23,7 +23,7 @@ Add_message::Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t 
 	status(_status) {};
 								
 void Add_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "qid : " << qid << endl <<  "price : " << price << endl << "volume : " << volume << endl << "status : " << status << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl <<  "price : " << price << endl << "volume : " << volume << endl << "status : " << status << endl << endl;
 }
 
 // CONTROL
@@ -34,7 +34,7 @@ Control_message::Control_message(uint8_t _type, uint64_t _time, uint16_t _sid, c
 	status(_status) {};
 
 void Control_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "status : " << status << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "status : " << status << endl << endl;
 }
 
 // REDUCE
@@ -46,7 +46,7 @@ Reduce_message::Reduce_message(uint8_t _type, uint64_t _time, uint16_t _sid, uin
 	volume(_volume) {};
 
 void Reduce_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "qid : " << qid << endl << "volume : " << volume << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl << "volume : " << volume << endl << endl;
 }
 
 // EXECUTION
@@ -59,7 +59,7 @@ Execution_message::Execution_message(uint8_t _type, uint64_t _time, uint16_t _si
 	mid(_mid) {};
 
 void Execution_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "qid : " << qid << endl << "volume : " << volume << endl << "mid : " << mid << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl << "volume : " << volume << endl << "mid : " << mid << endl << endl;
 }
 
 // MASTER
@@ -74,7 +74,7 @@ Master_message::Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, cha
 	classification(_classification) {};
 
 void Master_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "symbol : " << symbol << endl << "currency : " << currency << endl << "lot : " << lot << endl << "tick : " << tick << endl << "classification : " << classification << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "symbol : " << symbol << endl << "currency : " << currency << endl << "lot : " << lot << endl << "tick : " << tick << endl << "classification : " << classification << endl << endl;
 }
 // MODIFY
 
@@ -87,7 +87,7 @@ Modify_message::Modify_message(uint8_t _type, uint64_t _time, uint16_t _sid, uin
 	volume(_volume) {};
 
 void Modify_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "sid : " << sid << endl << "qid : " << qid << endl << "nid : " << nid << endl << "price : " << price << endl << "volume : " << volume << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl << "nid : " << nid << endl << "price : " << price << endl << "volume : " << volume << endl << endl;
 }
 
 // REMOTE
@@ -98,7 +98,7 @@ Remote_message::Remote_message(uint8_t _type, uint64_t _time, uint16_t _sid, uin
 	qid(_qid) {};
 
 void Remote_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << endl << "sid : " << sid << endl << "qid : " << qid << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl << endl;
 }
 
 // PROTOCOL
@@ -108,5 +108,5 @@ Protocol_message::Protocol_message(uint8_t _type, uint64_t _time, uint32_t _vers
 	version(_version) {};
 
 void Protocol_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "version : " << version << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "version : " << version << endl << endl;
 }
