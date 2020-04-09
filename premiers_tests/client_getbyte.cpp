@@ -68,6 +68,7 @@ int main(int argc, char const *argv[])
             read(sock, status, 1);
 
             Add_message add {a, time[0], sid[0], qid[0], price[0], volume[0], status[0]};
+            add.Display();
 
 		} else if (a == 'C') { // type CONTROL
 
@@ -81,6 +82,7 @@ int main(int argc, char const *argv[])
             read(sock, status, 1);
 
             Control_message control {a, time[0], sid[0], status[0]};
+            control.Display();
 		
         } else if (a == 'D') { // type REDUCE
 
@@ -97,6 +99,7 @@ int main(int argc, char const *argv[])
             read(sock, volume, 4);
 
             Reduce_message reduce {a, time[0], sid[0], qid[0], volume[0]};
+            reduce.Display();
         			
 		} else if (a == 'E') { // type EXECUTION
 		
@@ -116,6 +119,7 @@ int main(int argc, char const *argv[])
             read(sock, mid, 8);
 
             Execution_message exec {a, time[0], sid[0], qid[0], volume[0], mid[0]};
+            exec.Display();
 
 		} else if (a == 'L') { // type MASTER
 		
@@ -140,7 +144,8 @@ int main(int argc, char const *argv[])
             char classification[1];
             read(sock, classification, 1);
 
-            //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]};            
+            //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]}; 
+            // master.Display();           
 
 		} else if (a == 'M') { // type MODIFY
 		
@@ -163,6 +168,7 @@ int main(int argc, char const *argv[])
             read(sock, volume, 4);
 
             Modify_message modify {a, time[0], sid[0], qid[0], nid[0], price[0], volume[0]};
+            modify.Display();
 
 		} else if (a == 'R') { // type REMOTE
 
@@ -175,7 +181,8 @@ int main(int argc, char const *argv[])
             uint64_t qid[1];
             read(sock, qid, 8);
 
-            Remote_message remote {a, time[0], sid[0], qid[0]};		
+            Remote_message remote {a, time[0], sid[0], qid[0]};	
+            remote.Display();	
         	
 		} else if (a == 'Z') { // type PROTOCOL
 		
@@ -186,8 +193,13 @@ int main(int argc, char const *argv[])
             read(sock, version, 4);
 
             Protocol_message protocol {a, time[0], version[0]};
+            protocol.Display();
         	
 		}
+
+            else{
+                  cout << "erreur :" << a << endl;
+            }
 	}
     return 0; 
 } 
