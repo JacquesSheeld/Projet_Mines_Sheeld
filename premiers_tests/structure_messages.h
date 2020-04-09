@@ -22,6 +22,7 @@ class Add_message : public message { // Type : A
 		char status;
 	public:
 		Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _price, uint32_t _volume, char _status);
+		void Display();
 
 };
 
@@ -94,6 +95,6 @@ class Protocol_message : public message{ // Type : Z
 		uint32_t version;
 	public:
 		Protocol_message(uint8_t _type, uint64_t _time, uint32_t _version);
-		Display();
+		void Display();
 	
 };
