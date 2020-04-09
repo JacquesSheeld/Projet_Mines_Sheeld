@@ -93,5 +93,6 @@ class Protocol_message : public message{ // Type : Z
 		uint32_t version;
 	public:
 		Protocol_message(uint8_t _type, uint64_t _time, uint32_t _version);
+		Display();
 	
 };

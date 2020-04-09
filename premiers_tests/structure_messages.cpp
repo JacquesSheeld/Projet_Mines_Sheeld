@@ -1,5 +1,5 @@
 #include "structure_messages.h"
-
+using namespace std;
 // Message général
 
 message::message(uint8_t _type, uint64_t _time): type(_type), time(_time) {};
@@ -70,5 +70,9 @@ Remote_message::Remote_message(uint8_t _type, uint64_t _time, uint16_t _sid, uin
 // PROTOCOL
 
 Protocol_message::Protocol_message(uint8_t _type, uint64_t _time, uint32_t _version):
-																					message(_type, _time),
-																					version(_version) {};																					
+	message(_type, _time),
+	version(_version) {};
+
+Protocol_message::Display():
+	cout << "type : " << type << endl << "time : " << time << endl << "version : " << version << endl;
+
