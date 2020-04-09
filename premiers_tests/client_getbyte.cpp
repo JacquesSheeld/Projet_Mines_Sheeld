@@ -9,13 +9,28 @@
 #include <iostream>
 #include <bitset>
 #include "structure_messages.cpp"
-#define PORT 9999 
 
 using namespace std;
 
 
-int main(int argc, char const *argv[]) 
-{ 
+int main(int argc, char** argv) 
+{ 	
+	if (argc != 2){
+		cout << "usage : " << argv[0] << " [--port=]" << endl;
+		return 0;
+	}
+	char* check = new char[7];
+	strncpy(check, argv[1], 7);
+	check[7] = '\0';
+	if (strcmp("--port=",check) != 0){
+		cout << "usage : " << argv[0] << " [--port=]" << endl;
+		return 0;
+	}
+	char* port = new char[strlen(argv[1]) - 7];
+	strncpy(port, argv[1] + 7, strlen(argv[1]) - 7);
+	port[strlen(argv[1]) - 7] = '\0';
+	int PORT = atoi(port);
+
     int sock = 0, valread; 
     struct sockaddr_in serv_addr; 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
