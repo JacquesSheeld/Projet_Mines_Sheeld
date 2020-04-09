@@ -53,20 +53,22 @@ Execution_message::Execution_message(uint8_t _type, uint64_t _time, uint16_t _si
 // MODIFY
 
 Modify_message::Modify_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint64_t _nid, uint32_t _price, uint32_t _volume):																				
-																					message(_type, _time),
-																					sid(_sid),
-																					qid(_qid),
-																					nid(_nid),
-																					price(_price),
-																					volume(_volume) {};
+	message(_type, _time),
+	sid(_sid),
+	qid(_qid),
+	nid(_nid),
+	price(_price),
+	volume(_volume) {};
 
 // REMOTE
 
 Remote_message::Remote_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid):
-																					message(_type, _time),
-																					sid(_sid),
-																					qid(_qid) {};
+	message(_type, _time),
+	sid(_sid),
+	qid(_qid) {};
 
+Remote_message::Display():
+	cout << "type : " << _type << "_time : " << time << endl << "sid : " << _sid << endl << "qid : " << _qid << endl << endl
 // PROTOCOL
 
 Protocol_message::Protocol_message(uint8_t _type, uint64_t _time, uint32_t _version):

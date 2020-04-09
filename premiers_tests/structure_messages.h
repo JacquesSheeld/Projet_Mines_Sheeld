@@ -85,6 +85,7 @@ class Remote_message : public message{ // Type : R
 		uint64_t qid;
 	public:
 		Remote_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid);
+		void Display();
 	
 };
 
