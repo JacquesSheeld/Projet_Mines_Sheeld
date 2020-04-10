@@ -174,6 +174,7 @@ int main(int argc, char** argv)
 
             //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]};
             n_master += 1;
+            Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]}; 
             // master.Display();           
 
 		} else if (a == 'M') { // type MODIFY
