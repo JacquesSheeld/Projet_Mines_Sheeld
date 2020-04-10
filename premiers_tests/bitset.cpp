@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
     string s = "Hello from client";
     char hello [s.size() + 1];
     strcpy(hello, s.c_str());
-    bitset<8> buffer[2];
+    bitset<8> buffer[1];
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
     { 
         printf("\n Socket creation error \n"); 
@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
         return -1; 
     } 
     char a;
-    while(read(sock, buffer, 2))
+    while(read(sock, buffer, 1))
     {
         cout << *buffer; 
         a = getchar();
