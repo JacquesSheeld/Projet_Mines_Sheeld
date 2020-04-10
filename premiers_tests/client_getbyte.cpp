@@ -57,6 +57,15 @@ int main(int argc, char** argv)
 
     uint8_t buffer[1];
     uint8_t a;
+    int n_add = 0;
+    int n_control = 0;
+    int n_reduce = 0;
+    int n_execution = 0;
+    int n_master = 0;
+    int n_modify = 0;
+    int n_remote = 0;
+    int n_protocol = 0;
+    int n_erreur = 0;
     while(read(sock, buffer, 1))
 	{
 		a = buffer[0]; //On est sur de lire un uint8 à cette étape, car on commence un nouveau message
@@ -83,7 +92,8 @@ int main(int argc, char** argv)
             read(sock, status, 1);
 
             Add_message add {a, time[0], sid[0], qid[0], price[0], volume[0], status[0]};
-            add.Display();
+            n_add += 1;
+            //add.Display();
 
 		} else if (a == 'C') { // type CONTROL
 
@@ -97,7 +107,8 @@ int main(int argc, char** argv)
             read(sock, status, 1);
 
             Control_message control {a, time[0], sid[0], status[0]};
-            control.Display();
+            n_control += 1;
+            //control.Display();
 		
         } else if (a == 'D') { // type REDUCE
 
@@ -114,7 +125,8 @@ int main(int argc, char** argv)
             read(sock, volume, 4);
 
             Reduce_message reduce {a, time[0], sid[0], qid[0], volume[0]};
-            reduce.Display();
+            n_reduce += 1;
+            //reduce.Display();
         			
 		} else if (a == 'E') { // type EXECUTION
 		
@@ -134,7 +146,8 @@ int main(int argc, char** argv)
             read(sock, mid, 8);
 
             Execution_message exec {a, time[0], sid[0], qid[0], volume[0], mid[0]};
-            exec.Display();
+            n_execution += 1;
+            //exec.Display();
 
 		} else if (a == 'L') { // type MASTER
 		
@@ -159,7 +172,8 @@ int main(int argc, char** argv)
             char classification[1];
             read(sock, classification, 1);
 
-            //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]}; 
+            //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]};
+            n_master += 1;
             // master.Display();           
 
 		} else if (a == 'M') { // type MODIFY
@@ -183,7 +197,8 @@ int main(int argc, char** argv)
             read(sock, volume, 4);
 
             Modify_message modify {a, time[0], sid[0], qid[0], nid[0], price[0], volume[0]};
-            modify.Display();
+            n_modify += 1;
+            //modify.Display();
 
 		} else if (a == 'R') { // type REMOTE
 
@@ -197,7 +212,8 @@ int main(int argc, char** argv)
             read(sock, qid, 8);
 
             Remote_message remote {a, time[0], sid[0], qid[0]};	
-            remote.Display();	
+            n_remote += 1;
+            //remote.Display();	
         	
 		} else if (a == 'Z') { // type PROTOCOL
 		
@@ -208,14 +224,25 @@ int main(int argc, char** argv)
             read(sock, version, 4);
 
             Protocol_message protocol {a, time[0], version[0]};
-            protocol.Display();
+            n_protocol += 1;
+            //protocol.Display();
         	
 		}
 
             else{
                   cout << "erreur :" << a << endl;
+                  n_erreur += 1;
             }
 	}
+    cout << "nb add : " << n_add << endl;
+    cout << "nb control : " << n_control << endl;
+    cout << "nb execute : " << n_execution << endl;
+    cout << "nb reduce : " << n_reduce << endl;
+    cout << "nb remote : " << n_remote << endl;
+    cout << "nb master : " << n_master << endl;
+    cout << "nb modify : " << n_modify << endl;
+    cout << "nb protocol : " << n_protocol << endl;
+    cout << "nb erreur : " << n_erreur << endl;
     return 0; 
 } 
 
