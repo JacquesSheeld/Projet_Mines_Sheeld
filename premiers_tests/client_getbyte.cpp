@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     uint8_t buffer[1];
     uint8_t a;
     int i = 0;
-    while(read(sock, buffer, 1))
+    while(read(sock, buffer, 1, std::ios::binary))
 
 	{
 		a = buffer[0]; //On est sur de lire un uint8 à cette étape, car on commence un nouveau message
