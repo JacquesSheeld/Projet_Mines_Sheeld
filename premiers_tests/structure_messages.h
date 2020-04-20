@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class message {
+class [[gnu::packed]] message {
 	protected:
 		uint8_t type;
 		uint64_t time;
@@ -15,29 +15,29 @@ class message {
 		message(uint8_t _type, uint64_t _time);
 };
 
-class Add_message : public message { // Type : A
+class [[gnu::packed]] Add_message : public message { // Type : A
 	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
 		uint32_t price;
 		uint32_t volume;
-		char status;
+		char* side;
 	public:
-		Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _price, uint32_t _volume, char _status);
+		Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _price, uint32_t _volume, char* _side);
 		void Display();
 
 };
 
-class Control_message : public message { // Type : C
+class [[gnu::packed]] Control_message : public message { // Type : C
 	protected:
 		uint16_t sid; // encodage du produit 
-		char status;
+		char* status;
 	public:
-		Control_message(uint8_t _type, uint64_t _time, uint16_t _sid, char _status);
+		Control_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _status);
 		void Display();
 };
 
-class Reduce_message : public message { // Type : D
+class [[gnu::packed]] Reduce_message : public message { // Type : D
 	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -48,7 +48,7 @@ class Reduce_message : public message { // Type : D
 	
 };
 
-class Execution_message : public message {	// Type : E
+class [[gnu::packed]] Execution_message : public message {	// Type : E
 	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -60,21 +60,21 @@ class Execution_message : public message {	// Type : E
 	
 };
 
-class Master_message : public message{ // Type : L
+class [[gnu::packed]] Master_message : public message{ // Type : L
 	protected:
 		uint16_t sid; // encodage du produit 
 		char* symbol = new char[8];
 		char* currency = new char[8];
 		uint8_t lot;
 		uint8_t tick;
-		char classification;
+		char* classification;
 	public:
-		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char _classification);
+		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char* _classification);
 		void Display();
 	
 };
 
-class Modify_message : public message { // Type : M
+class [[gnu::packed]] Modify_message : public message { // Type : M
 	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -87,7 +87,7 @@ class Modify_message : public message { // Type : M
 	
 };
 
-class Remote_message : public message{ // Type : R
+class [[gnu::packed]] Remote_message : public message{ // Type : R
 	protected:
 		uint16_t sid; // encodage du produit 
 		uint64_t qid;
@@ -97,7 +97,7 @@ class Remote_message : public message{ // Type : R
 	
 };
 
-class Protocol_message : public message{ // Type : Z
+class [[gnu::packed]] Protocol_message : public message{ // Type : Z
 	protected:
 		uint32_t version;
 	public:

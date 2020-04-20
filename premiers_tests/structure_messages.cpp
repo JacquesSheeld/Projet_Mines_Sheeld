@@ -14,21 +14,21 @@ message::message(uint8_t _type, uint64_t _time): type(_type), time(_time) {
 
 // ADD
 
-Add_message::Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _price, uint32_t _volume, char _status):
+Add_message::Add_message(uint8_t _type, uint64_t _time, uint16_t _sid, uint64_t _qid, uint32_t _price, uint32_t _volume, char* _side):
 	message(_type, _time),
 	sid(_sid),
 	qid(_qid),
 	price(_price),
 	volume(_volume),
-	status(_status) {};
+	side(_side) {};
 								
 void Add_message::Display(){
-	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl <<  "price : " << price << endl << "volume : " << volume << endl << "status : " << status << endl << endl;
+	cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << "sid : " << sid << endl << "qid : " << qid << endl <<  "price : " << price << endl << "volume : " << volume << endl << "side : " << side << endl << endl;
 }
 
 // CONTROL
 
-Control_message::Control_message(uint8_t _type, uint64_t _time, uint16_t _sid, char _status):
+Control_message::Control_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _status):
 	message(_type, _time),
 	sid(_sid),
 	status(_status) {};
@@ -64,7 +64,7 @@ void Execution_message::Display(){
 
 // MASTER
 
-Master_message::Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char _classification):
+Master_message::Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char* _classification):
 	message(_type, _time),
 	sid(_sid),
 	symbol(_symbol),
