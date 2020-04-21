@@ -10,82 +10,19 @@
 #include <bitset>
 #include "structure_messages.cpp"
 #include "assert.h"
-#include <mutex>          // std::mutex
 using namespace std;
-
-std::mutex mtx;           // mutex for critical section
-
-int read_lock_8(int sock, uint8_t* data, int n){
-      mtx.lock();
-
-      int nread = read(sock, data, n);
-      nread += read(sock, data, n-nread);
-      cout << "8 " <<nread << "  " <<   sizeof data  << "    " << *data << endl;
-      cout << ( nread == sizeof data) << endl;
-      mtx.unlock();
-
-      return nread;
-}
-
-int read_lock_char8(int sock, char* data, int n){
-      mtx.lock();
-
-      int nread = read(sock, data, n);
-      nread += read(sock, data, n-nread);
-      cout << "char 8 " << nread << "  " <<  sizeof data << "    " << *data << endl;
-      cout << ( nread == sizeof data) << endl;
-      
-      mtx.unlock();
-
-      return nread;
-}
-int read_lock_char(int sock, char* data, int n){
-      mtx.lock();
-
-      int nread = read(sock, data, n);
-      nread += read(sock, data, n-nread);
-      cout << "char " << nread << "  " <<  sizeof data << "   " << *data << endl;
-      cout << ( nread == sizeof data) << endl;
-      
-      mtx.unlock();
-
-      return nread;
-}
-int read_lock_16(int sock, uint16_t* data, int n){
-      mtx.lock();
-
-      int nread = read(sock, data, n);
-      nread += read(sock, data, n-nread);
-      cout << "16 " << nread << "  " <<  sizeof data << "    " << *data  << endl;
-      cout << ( nread == sizeof data) << endl;
-      
-      mtx.unlock();
-
-      return nread;
-}
-int read_lock_32(int sock, uint32_t* data, int n){
-      mtx.lock();
-
-      int nread = read(sock, data, n);
-      nread += read(sock, data, n-nread);
-      cout << "32 " << nread << "  " <<  sizeof data << "    " << *data << endl;
-      cout << ( nread == sizeof data) << endl;
-      mtx.unlock();
-
-      return nread;
-}
-
-int read_lock_64(int sock, uint64_t* data, int n){
-      mtx.lock();
-
-      int nread = read(sock, data, n);
-      nread += read(sock, data, n-nread);
-      cout << "64 " << nread << "  " <<  sizeof data << "    " << *data << endl;
-      cout << ( nread == sizeof data) << endl;
-      
-      mtx.unlock();
-
-      return nread;
+template<typename T>
+int insread(int sock, T *data, int num){
+  int nread = 0; 
+  while (nread < num){
+    int a = read(sock, data, num - nread);
+    if (a == 0){
+      break;}
+    else{
+      nread += a;
+    }
+    }
+  return nread;
 }
 
 int main(int argc, char** argv) 
@@ -141,74 +78,66 @@ int main(int argc, char** argv)
     int n_remote = 0;
     int n_protocol = 0;
     int n_erreur = 0;
-    int n = 0;
-    int nread = read_lock_8(sock, &a, sizeof a);
-    if (read != 0){
+    int nread = insread(sock, &a, sizeof a);
+    if (nread != 0){
       assert(nread == sizeof a);
     }
-    cout << a << endl;
-    cout << "entering loop" << endl;
     while(nread != 0)
 	{
 	  //a = buffer[0]; //On est sur de lire un char à cette étape, car on commence un nouveau message
 
-        if (n==2){
-            //break;
-        }
 
-        n++;
 		if (a == 'A') { 		// type ADD
             
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
-
+            assert(insread(sock, &time, sizeof time) == sizeof time);
+	    
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
             uint64_t qid;
-            assert(read_lock_64(sock, &qid, sizeof qid) == sizeof qid);
+            assert(insread(sock, &qid, sizeof qid) == sizeof qid);
 
             uint32_t price;
-            assert(read_lock_32(sock, &price, sizeof price) == sizeof price);
+            assert(insread(sock, &price, sizeof price) == sizeof price);
 
             uint32_t volume;
-            assert(read_lock_32(sock, &volume, sizeof volume) == sizeof volume);
+            assert(insread(sock, &volume, sizeof volume) == sizeof volume);
 
             char* side = new char[1];
-            assert(read_lock_char(sock, side, 1) == 1);
+            assert(insread(sock, side, 1) == 1);
 
             Add_message add {a, time, sid, qid, price, volume, side};
             n_add += 1;
             //add.Display();
-	        delete [] side;
+	    delete [] side;
 		} else if (a == 'C') { // type CONTROL
 
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
             char* status = new char[1];
-            assert(read_lock_char(sock, status, 1) == 1);
-            
+            assert(insread(sock, status, 1) == 1);
             Control_message control {a, time, sid, status};
             n_control += 1;
             //control.Display();
-	        delete [] status;
+	    delete [] status;
         } else if (a == 'D') { // type REDUCE
 
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
             uint64_t qid;
-            assert(read_lock_64(sock, &qid, sizeof qid) == sizeof qid);
+            assert(insread(sock, &qid, sizeof qid) == sizeof qid);
 
             uint32_t volume;
-            assert(read_lock_32(sock, &volume, sizeof volume) == sizeof volume);
+            assert(insread(sock, &volume, sizeof volume) == sizeof volume);
 
             Reduce_message reduce {a, time, sid, qid, volume};
             n_reduce += 1;
@@ -217,19 +146,19 @@ int main(int argc, char** argv)
 		} else if (a == 'E') { // type EXECUTION
 		
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
             uint64_t qid;
-            assert(read_lock_64(sock, &qid, sizeof qid) == sizeof qid);
+            assert(insread(sock, &qid, sizeof qid) == sizeof qid);
 
             uint32_t volume;
-            assert(read_lock_32(sock, &volume, sizeof volume) == sizeof volume);
+            assert(insread(sock, &volume, sizeof volume) == sizeof volume);
 
             uint64_t mid;
-            assert(read_lock_64(sock, &mid, sizeof mid) == sizeof mid);
+            assert(insread(sock, &mid, sizeof mid) == sizeof mid);
 
             Execution_message exec {a, time, sid, qid, volume, mid};
             n_execution += 1;
@@ -238,52 +167,53 @@ int main(int argc, char** argv)
 		} else if (a == 'L') { // type MASTER
 		
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 	    
+
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
-	        char* symbol = new char[8];
-            assert(read_lock_char(sock, symbol, sizeof symbol) == sizeof symbol);
+	    char* symbol = new char[8];
+            assert(insread(sock, symbol, sizeof symbol) == sizeof symbol);
 
-	        char* currency = new char[8];
-            assert(read_lock_char(sock, currency, sizeof currency) == sizeof currency);
+	    char* currency = new char[8];
+            assert(insread(sock, currency, sizeof currency) == sizeof currency);
 
             uint8_t lot;
-            assert(read_lock_8(sock, &lot, sizeof lot) == sizeof lot);
+            assert(insread(sock, &lot, sizeof lot) == sizeof lot);
 
             uint8_t tick;
-            assert(read_lock_8(sock, &tick, sizeof tick) == sizeof tick);
+            assert(insread(sock, &tick, sizeof tick) == sizeof tick);
 
-	        char* classification = new char[1];
-            assert(read_lock_char(sock, classification, sizeof classification) == sizeof classification);
+	    char* classification = new char[1];
+            assert(insread(sock, classification, sizeof classification) == sizeof classification);
 
             //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]};
             n_master += 1;
             Master_message master {a, time, sid, symbol, currency, lot, tick, classification}; 
             // master.Display();           
-    	    delete [] symbol;
-    	    delete [] currency;
-    	    delete [] classification;
+	    delete [] symbol;
+	    delete [] currency;
+	    delete [] classification;
 		} else if (a == 'M') { // type MODIFY
 		
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
             uint64_t qid;
-            assert(read_lock_64(sock, &qid, sizeof qid) == sizeof qid);
+            assert(insread(sock, &qid, sizeof qid) == sizeof qid);
 
             uint64_t nid;
-            assert(read_lock_64(sock, &nid, sizeof nid) == sizeof nid);
+            assert(insread(sock, &nid, sizeof nid) == sizeof nid);
 
             uint32_t price;
-            assert(read_lock_32(sock, &price, sizeof price) == sizeof price);
+            assert(insread(sock, &price, sizeof price) == sizeof price);
 
             uint32_t volume;
-            assert(read_lock_32(sock, &volume, sizeof volume) == sizeof volume);
+            assert(insread(sock, &volume, sizeof volume) == sizeof volume);
 
             Modify_message modify {a, time, sid, qid, nid, price, volume};
             n_modify += 1;
@@ -292,13 +222,13 @@ int main(int argc, char** argv)
 		} else if (a == 'R') { // type REMOTE
 
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 
             uint16_t sid;
-            assert(read_lock_16(sock, &sid, sizeof sid) == sizeof sid);
+            assert(insread(sock, &sid, sizeof sid) == sizeof sid);
 
             uint64_t qid;
-            assert(read_lock_64(sock, &qid, sizeof qid) == sizeof qid);
+            assert(insread(sock, &qid, sizeof qid) == sizeof qid);
 
             Remote_message remote {a, time, sid, qid};	
             n_remote += 1;
@@ -307,35 +237,35 @@ int main(int argc, char** argv)
 		} else if (a == 'Z') { // type PROTOCOL
 		
             uint64_t time;
-            assert(read_lock_64(sock, &time, sizeof time) == sizeof time);
+            assert(insread(sock, &time, sizeof time) == sizeof time);
 
             uint32_t version;
-            assert(read_lock_32(sock, &version, sizeof version) == sizeof version);
+            assert(insread(sock, &version, sizeof version) == sizeof version);
 
             Protocol_message protocol {a, time, version};
             n_protocol += 1;
-            protocol.Display();
+            //protocol.Display();
         	
 		}
 
-        else {
-            cout << "erreur : " << (int)a << endl;
-            n_erreur += 1;
-        }
+            else{
+                  cout << "erreur :" << a << endl;
+                  n_erreur += 1;
+            }
 
-		nread = read_lock_8(sock, &a, sizeof a);
+		nread = insread(sock, &a, sizeof a);
 		if (nread!= 0){
 		  assert (nread == sizeof a);
 		}
 	}
-    /*cout << "nb add : " << n_add << endl;
+    cout << "nb add : " << n_add << endl;
     cout << "nb control : " << n_control << endl;
     cout << "nb execute : " << n_execution << endl;
     cout << "nb reduce : " << n_reduce << endl;
     cout << "nb remote : " << n_remote << endl;
     cout << "nb master : " << n_master << endl;
     cout << "nb modify : " << n_modify << endl;
-    cout << "nb protocol : " << n_protocol << endl;*/
+    cout << "nb protocol : " << n_protocol << endl;
     cout << "nb erreur : " << n_erreur << endl;
     return 0; 
 } 
