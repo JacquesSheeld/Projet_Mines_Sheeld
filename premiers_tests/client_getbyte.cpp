@@ -82,6 +82,9 @@ int main(int argc, char** argv)
     if (nread != 0){
       assert(nread == sizeof a);
     }
+    message *m;
+    message mes = message(0,0);
+    m = &mes;
     while(nread != 0)
 	{
 	  //a = buffer[0]; //On est sur de lire un char à cette étape, car on commence un nouveau message
@@ -108,6 +111,7 @@ int main(int argc, char** argv)
             assert(insread(sock, side, 1) == 1);
 
             Add_message add {a, time, sid, qid, price, volume, side};
+	    m = &add;
             n_add += 1;
             //add.Display();
 	    delete [] side;
@@ -122,6 +126,7 @@ int main(int argc, char** argv)
             char* status = new char[1];
             assert(insread(sock, status, 1) == 1);
             Control_message control {a, time, sid, status};
+	    m = &control;
             n_control += 1;
             //control.Display();
 	    delete [] status;
@@ -140,6 +145,7 @@ int main(int argc, char** argv)
             assert(insread(sock, &volume, sizeof volume) == sizeof volume);
 
             Reduce_message reduce {a, time, sid, qid, volume};
+	    m = &reduce;
             n_reduce += 1;
             //reduce.Display();
         			
@@ -160,7 +166,8 @@ int main(int argc, char** argv)
             uint64_t mid;
             assert(insread(sock, &mid, sizeof mid) == sizeof mid);
 
-            Execution_message exec {a, time, sid, qid, volume, mid};
+            Execution_message execution {a, time, sid, qid, volume, mid};
+	    m = &execution;
             n_execution += 1;
             //exec.Display();
 	    
@@ -188,10 +195,9 @@ int main(int argc, char** argv)
 	    char* classification = new char[1];
             assert(insread(sock, classification, sizeof classification) == sizeof classification);
 
-            //Master_message master {a, time[0], sid[0], symbol, currency, lot[0], tick[0], classification[0]};
             n_master += 1;
-            Master_message master {a, time, sid, symbol, currency, lot, tick, classification}; 
-            // master.Display();           
+            Master_message master {a, time, sid, symbol, currency, lot, tick, classification};
+	    m = &master;
 	    delete [] symbol;
 	    delete [] currency;
 	    delete [] classification;
@@ -216,6 +222,7 @@ int main(int argc, char** argv)
             assert(insread(sock, &volume, sizeof volume) == sizeof volume);
 
             Modify_message modify {a, time, sid, qid, nid, price, volume};
+	    m = &modify;
             n_modify += 1;
             //modify.Display();
 
@@ -230,7 +237,8 @@ int main(int argc, char** argv)
             uint64_t qid;
             assert(insread(sock, &qid, sizeof qid) == sizeof qid);
 
-            Remote_message remote {a, time, sid, qid};	
+            Remote_message remote {a, time, sid, qid};
+	    m = &remote;
             n_remote += 1;
             //remote.Display();	
         	
@@ -243,6 +251,7 @@ int main(int argc, char** argv)
             assert(insread(sock, &version, sizeof version) == sizeof version);
 
             Protocol_message protocol {a, time, version};
+	    m = &protocol;
             n_protocol += 1;
             //protocol.Display();
         	
@@ -250,6 +259,7 @@ int main(int argc, char** argv)
 
             else{
                   cout << "erreur :" << a << endl;
+		  m->Display();
                   n_erreur += 1;
             }
 

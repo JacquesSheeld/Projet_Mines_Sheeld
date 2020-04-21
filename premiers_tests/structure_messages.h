@@ -3,7 +3,8 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
-
+#include "unistd.h"
+#include "stdint.h"
 using namespace std;
 
 class [[gnu::packed]] message {
@@ -12,6 +13,7 @@ class [[gnu::packed]] message {
 		uint64_t time;
 		time_t time_message;
 	public:
+		virtual void Display();
 		message(uint8_t _type, uint64_t _time);
 };
 

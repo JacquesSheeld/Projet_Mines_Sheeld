@@ -10,7 +10,8 @@ message::message(uint8_t _type, uint64_t _time): type(_type), time(_time) {
 	const TimePoint TimePoint_message(duration_nanoseconds);
 	time_message = Clock::to_time_t(TimePoint_message);
 };
-
+void::message::Display(){
+  cout << "type : " << type << endl << "time : " << time << endl << "time_t : " << ctime(&time_message) << endl;}
 
 // ADD
 
