@@ -65,8 +65,8 @@ class [[gnu::packed]] Execution_message : public message {	// Type : E
 class [[gnu::packed]] Master_message : public message{ // Type : L
 	protected:
 		uint16_t sid; // encodage du produit 
-		char* symbol = new char[8];
-		char* currency = new char[8];
+		char* symbol = new char[9];
+		char* currency = new char[9];
 		uint8_t lot;
 		uint8_t tick;
 		char* classification;

@@ -195,7 +195,7 @@ int main(int argc, char** argv)
 	    assert(insread(sock, &symbol6, sizeof symbol6) == sizeof symbol6);
 	    assert(insread(sock, &symbol7, sizeof symbol7) == sizeof symbol7);
 	    assert(insread(sock, &symbol8, sizeof symbol8) == sizeof symbol8);
-	    char symbol[8] = {symbol1, symbol2, symbol3, symbol4, symbol5, symbol6, symbol7, symbol8};
+	    char symbol[9] = {symbol1, symbol2, symbol3, symbol4, symbol5, symbol6, symbol7, symbol8,'\0'};
 	    char currency1;
 	    char currency2;
 	    char currency3;
@@ -213,7 +213,7 @@ int main(int argc, char** argv)
 	    assert(insread(sock, &currency6, sizeof currency6) == sizeof currency6);
 	    assert(insread(sock, &currency7, sizeof currency7) == sizeof currency7);
 	    assert(insread(sock, &currency8, sizeof currency8) == sizeof currency8);
-	    char currency[8] = {currency1, currency2, currency3, currency4, currency5, currency6, currency7, currency8};
+	    char currency[9] = {currency1, currency2, currency3, currency4, currency5, currency6, currency7, currency8, '\0'};
             uint8_t lot;
             assert(insread(sock, &lot, sizeof lot) == sizeof lot);
 
