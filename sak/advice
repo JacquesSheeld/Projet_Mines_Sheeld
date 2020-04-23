@@ -1,0 +1,194 @@
+Quelques conseils en C++
+========================
+
+(1) Eviter les couples new/delete utilities
+------------------------------------------
+
+Exemple:
+
+    if (condition) {
+        char *s = new char[23];
+        work(s);
+        delete [] s;
+    }
+
+devrait s'écrire:
+
+    if (condition) {
+        char s[23];
+        work(s);
+    }
+
+Autre exemple:
+
+    class T {
+        char *status = new char[1];
+        char *symbol = new char[8];
+    };
+
+provoque une perte mémoire (memory leak) et devrait s'écrire:
+
+    class Message {
+        char *status = new char[1];
+        char *symbol = new char[8];
+    public:
+        ~Message() {
+            delete [] status;
+            delete [] symbol;
+        }
+    };
+
+car c'est (litteralement) identique a ceci:
+
+    class Message {
+        char *status;
+        char *symbol;
+    public:
+        Message() {
+            status = new char[1];
+            symbol = new char[8];
+        }
+        ~Message() {
+            delete [] status;
+            delete [] symbol;
+        }
+    };
+mais le premier exemple suggère qu'on peut faire mieux:
+
+    class Message {
+        char status[1];
+        char *symbol[8];
+    };
+
+ou encore mieux:
+
+    class Message {
+        char status; // par de vraie différence avec "char status[1];"
+        char *symbol[8];
+    };
+
+
+(2) Eviter les variables intermédiaires inutiles
+------------------------------------------------
+
+Exemple:
+
+    if (condition) {
+        uint64_t time;
+        read(sock, &time, sizeof time);
+
+        uint16_t sid;
+        read(sock, &sid, sizeof sid);
+
+        uint64_t qid;
+        read(sock, &qid, sizeof qid);
+
+        uint32_t volume;
+        read(sock, &volume, sizeof volume);
+
+        Reduce_message reduce {a, time, sid, qid, volume};
+    }
+
+devrait s'écrire:
+
+    if (condition) {
+        Reduce_message reduce;
+        reduce.type = a;
+        read(sock, &reduce.time, sizeof reduce.time);
+        read(sock, &reduce.sid, sizeof reduce.sid);
+        read(sock, &reduce.qid, sizeof reduce.qid);
+        read(sock, &reduce.colume, sizeof reduce.colume);
+    }
+ce qui revient a:
+
+    if (condition) {
+        Reduce_message reduce;
+        read(sock, (char *)&reduce + 1, sizeof reduce - 1); // en tenant compte de l'octet deja lu (de taille 1)
+    }
+
+si la structure Reduce_message est declarer [[gnu::packed]].
+
+
+(3) Attention a assert() de #include <assert.h>
+-----------------------------------------------
+
+Cette macro est faite pour commenter et tester le code. Elle ne doit pas être utilisée pour faire des opérations avec effet de bord car elle peut (et doit) disparaître lorsqu'on compile en version optimisée.
+
+Exemple:
+
+    #include <assert.h>
+    #include <stdio.h>
+
+    int main() {
+        assert(printf("Hello, World!\n"));
+    }
+
+marche en mode debug:
+
+    $ g++ -g -o hello hello.cc # "-g" -> mode debug (defaut)
+    $ ./hello
+    Hello, World!
+
+mais pas en mode optimisé:
+
+    $ g++ -O3 -DNDEBUG -o hello hello.cc # "-O3 -DNDENUG" -> mode optimisé
+    $ ./hello
+    ... rien ne se passe ici ...
+
+
+(4) Attention au mutex
+----------------------
+
+N'utiliser les mutex que lorsque c'est nécessaire, pas juste au cas ou.
+
+Exemple:
+
+    int read(int sock, uint8_t* data, int n){
+        mtx.lock();
+
+        int nread = read(sock, data, n);
+        nread += read(sock, data, n-nread);
+        cout << "8 " <<nread << "  " <<   sizeof data  << "    " << *data << endl;
+        cout << ( nread == sizeof data) << endl;
+
+        mtx.unlock();
+
+        return nread;
+    }
+
+Ici la seule portion a protéger est read(), donc le code devrait être:
+
+    int read(int sock, uint8_t* data, int n){
+        int nread = read(sock, data, n);
+
+        mtx.lock();
+        nread += read(sock, data, n-nread);
+        mtx.unlock();
+
+        cout << "8 " <<nread << "  " <<   sizeof data  << "    " << *data << endl;
+        cout << ( nread == sizeof data) << endl;
+
+        return nread;
+    }
+
+Mais ce n'est pas nécessaire car read() est thread-safe, donc le code devrait simplement être:
+
+    int read(int sock, uint8_t* data, int n){
+        int nread = read(sock, data, n);
+
+        nread += read(sock, data, n-nread);
+
+        cout << "8 " <<nread << "  " <<   sizeof data  << "    " << *data << endl;
+        cout << ( nread == sizeof data) << endl;
+
+        return nread;
+    }
+
+Autre point: le code original est incorrect car il peut provoquer une perte de ressource mutex et provoquer un deadlock en présence d'exception
+
+
+
+(5) Usage de l'attribut pacjed ([[gnu::packed]])
+------------------------------------------------
+
+Cet attribut est conçu pour un usage bas niveau, pour accéder directement a une portion de mémoire et/ou un flux d'octet provenant d'un fichier ou du réseau. Elle est inutile pour les types (classes) normaux et son usage est souvent contreproductif (code plus lent) voire incorrect (potentiellement code erroné).
