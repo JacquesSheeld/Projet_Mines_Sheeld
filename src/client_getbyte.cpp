@@ -220,13 +220,12 @@ int main(int argc, char** argv)
             uint8_t tick;
             assert(insread(sock, &tick, sizeof tick) == sizeof tick);
 
-	    char* classification = new char[1];
-            assert(insread(sock, classification, sizeof classification) == sizeof classification);
+	    char classification;
+            assert(insread(sock, &classification, sizeof classification) == sizeof classification);
 
             n_master += 1;
             Master_message master {a, time, sid, symbol, currency, lot, tick, classification};
 	    m = &master;
-	    delete [] classification;
 		} else if (a == 'M') { // type MODIFY
 		
             uint64_t time;

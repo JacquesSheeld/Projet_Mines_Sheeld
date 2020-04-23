@@ -69,9 +69,9 @@ class [[gnu::packed]] Master_message : public message{ // Type : L
 		char* currency = new char[9];
 		uint8_t lot;
 		uint8_t tick;
-		char* classification;
+		char classification;
 	public:
-		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char* _classification);
+		Master_message(uint8_t _type, uint64_t _time, uint16_t _sid, char* _symbol, char* _currency, uint8_t _lot, uint8_t _tick, char _classification);
 		void Display();
 	
 };
