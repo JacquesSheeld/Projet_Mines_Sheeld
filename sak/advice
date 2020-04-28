@@ -1,7 +1,7 @@
 Quelques conseils en C++
 ========================
 
-(1) Eviter les couples new/delete utilities
+(1) Eviter les couples new/delete inutiles
 ------------------------------------------
 
 Exemple:
@@ -38,7 +38,7 @@ provoque une perte mémoire (memory leak) et devrait s'écrire:
         }
     };
 
-car c'est (litteralement) identique a ceci:
+car c'est (littéralement) identique à ceci:
 
     class Message {
         char *status;
@@ -53,18 +53,19 @@ car c'est (litteralement) identique a ceci:
             delete [] symbol;
         }
     };
-mais le premier exemple suggère qu'on peut faire mieux:
+    
+Mais le premier exemple suggère qu'on peut faire mieux:
 
     class Message {
         char status[1];
-        char *symbol[8];
+        char symbol[8];
     };
 
-ou encore mieux:
+Ou encore mieux:
 
     class Message {
         char status; // par de vraie différence avec "char status[1];"
-        char *symbol[8];
+        char symbol[8];
     };
 
 
@@ -89,7 +90,7 @@ Exemple:
         Reduce_message reduce {a, time, sid, qid, volume};
     }
 
-devrait s'écrire:
+Devrait s'écrire:
 
     if (condition) {
         Reduce_message reduce;
@@ -99,17 +100,18 @@ devrait s'écrire:
         read(sock, &reduce.qid, sizeof reduce.qid);
         read(sock, &reduce.colume, sizeof reduce.colume);
     }
-ce qui revient a:
+
+Ce qui revient à:
 
     if (condition) {
         Reduce_message reduce;
-        read(sock, (char *)&reduce + 1, sizeof reduce - 1); // en tenant compte de l'octet deja lu (de taille 1)
+        read(sock, (char *)&reduce + 1, sizeof reduce - 1); // en tenant compte de l'octet déjà lu (de taille 1)
     }
 
-si la structure Reduce_message est declarer [[gnu::packed]].
+Si la structure Reduce_message est declarer [[gnu::packed]].
 
 
-(3) Attention a assert() de #include <assert.h>
+(3) Attention à assert() de #include <assert.h>
 -----------------------------------------------
 
 Cette macro est faite pour commenter et tester le code. Elle ne doit pas être utilisée pour faire des opérations avec effet de bord car elle peut (et doit) disparaître lorsqu'on compile en version optimisée.
@@ -123,13 +125,13 @@ Exemple:
         assert(printf("Hello, World!\n"));
     }
 
-marche en mode debug:
+Marche en mode debug:
 
     $ g++ -g -o hello hello.cc # "-g" -> mode debug (defaut)
     $ ./hello
     Hello, World!
 
-mais pas en mode optimisé:
+Mais pas en mode optimisé:
 
     $ g++ -O3 -DNDEBUG -o hello hello.cc # "-O3 -DNDENUG" -> mode optimisé
     $ ./hello
@@ -139,7 +141,7 @@ mais pas en mode optimisé:
 (4) Attention au mutex
 ----------------------
 
-N'utiliser les mutex que lorsque c'est nécessaire, pas juste au cas ou.
+N'utiliser les mutex que lorsque c'est nécessaire, pas juste au cas où.
 
 Exemple:
 
@@ -156,7 +158,7 @@ Exemple:
         return nread;
     }
 
-Ici la seule portion a protéger est read(), donc le code devrait être:
+Ici, la seule portion à protéger est read(), donc le code devrait être:
 
     int read(int sock, uint8_t* data, int n){
         int nread = read(sock, data, n);
@@ -184,11 +186,11 @@ Mais ce n'est pas nécessaire car read() est thread-safe, donc le code devrait s
         return nread;
     }
 
-Autre point: le code original est incorrect car il peut provoquer une perte de ressource mutex et provoquer un deadlock en présence d'exception
+Autre point: le code original est incorrect car il peut provoquer une perte de ressource mutex et provoquer un deadlock en présence d'exceptions.
 
 
 
 (5) Usage de l'attribut pacjed ([[gnu::packed]])
 ------------------------------------------------
 
-Cet attribut est conçu pour un usage bas niveau, pour accéder directement a une portion de mémoire et/ou un flux d'octet provenant d'un fichier ou du réseau. Elle est inutile pour les types (classes) normaux et son usage est souvent contreproductif (code plus lent) voire incorrect (potentiellement code erroné).
+Cet attribut est conçu pour un usage bas niveau, pour accéder directement à une portion de mémoire et/ou un flux d'octets provenant d'un fichier ou du réseau. Elle est inutile pour les types (classes) normaux et son usage est souvent contreproductif (code plus lent) voire incorrect (potentiellement code erroné).
